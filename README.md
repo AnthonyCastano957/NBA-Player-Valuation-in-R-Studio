@@ -8,6 +8,8 @@ explained about 39.7% of salary deviance. (R^2 = .392)
 I tested DBPM, TS%, and TOV% and found no actual change in the deviance.
 The model serves as a good basis for analyzing how contracts are valued in most front offices.
 The model fails to capture the advanced impact players such as Rudy Gobert have that would justify his contract.
+### Interpreting the graph
+The y-axis represents the actual contract in $ millions; the x-axis represents the single-number prod. index that a player produces. The red trendline displays how the GAM model on average should be paid based on their play.
 # Market Insight
 While teams use analytics heavily on the court, raw box scores still dominate NBA salary compensation. 
 # Final Thoughts
