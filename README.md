@@ -13,8 +13,6 @@ While teams use analytics heavily on the court, raw box scores still dominate NB
 ## Final Thoughts
 In reality, data analysts use much more complicated models that capture the nuance that doesn't exist within regular counting stats.
 I would like to study further models that front offices use that capture advanced metrics more accurately, such as machine learning and Bayesian analysis that help build better valuation models.
-
-
 ## Workflow
 # Importing
 Imported a CSV from Basketball-Reference with salary numbers for the 2025-2026 season.
