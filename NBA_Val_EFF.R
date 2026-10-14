@@ -7,25 +7,25 @@ library(rvest)
 library(tidyverse)
 library(hoopR)
 
+# Import Bball Ref salaries
+
 salaries_2025_26 <- read_csv("bref_salaries_2025_26.csv", skip = 1) %>%
-  # Select Player (Col B) and 2025-26 Salary (Col D)
   select(Player = `Player`, Salary_Raw = `2025-26`) %>%
-  # Filter out blank rows or header repetitions
   filter(!is.na(Player) & Player != "Player") %>%
   mutate(
-    # Clean player names (strip asterisks or extra white space)
     Player = str_trim(gsub("\\*", "", Player)),
-    # Remove $ signs and commas to convert string to numeric float
     salary = as.numeric(gsub("[\\$,]", "", Salary_Raw))
   ) %>%
-  # Remove missing or invalid salary rows
   filter(!is.na(salary) & salary > 0) %>%
   select(Player, salary) %>%
   distinct(Player, .keep_all = TRUE)
 
-# Verify rows loaded
+# Verify Rows Loaded
+
 print(paste("Successfully loaded", nrow(salaries_2025_26), "player salaries!"))
 head(salaries_2025_26)
+
+# Fetch Advanced Stats
 
 adv_efficiency_2026 <- read_csv("bref_advanced_2025_26.csv") %>%
   select(
@@ -44,7 +44,8 @@ adv_efficiency_2026 <- read_csv("bref_advanced_2025_26.csv") %>%
   filter(!is.na(TS_Pct) & !is.na(TOV_Pct) & !is.na(DBPM))%>%
   distinct(Player, .keep_all = TRUE)
 
-#Join performance data with imported salaries
+# Join performance data with imported salaries
+
 player_data_2026_eff <- player_data_2026 %>%
   inner_join(adv_efficiency_2026, by = c("athlete_display_name" = "Player"))
 
@@ -81,7 +82,8 @@ player_data_2026 <- player_perf %>%
   ) %>%
   filter(Salary_Millions > 1.0)
 
-#Fit GAM with volume + efficiency metrics
+# Fit GAM with volume + efficiency metrics
+
 gam_model_eff <- gam(
   log_salary ~ s(Minutes, k = 5) + 
     s(Prod_Index, k = 5) + 
@@ -92,9 +94,10 @@ gam_model_eff <- gam(
   method = "REML"
 )
 
-# 4. View results
+# View results
 summary(gam_model_eff)
 
+# Predictions and conversion from log scale
 
 player_data_2026_eff <- player_data_2026_eff %>%
   mutate(
@@ -103,10 +106,14 @@ player_data_2026_eff <- player_data_2026_eff %>%
     Surplus_Millions = Predicted_Salary_Millions - Salary_Millions
   )
 
+# Top 10 most underpaid players
+
 player_data_2026_eff %>%
   arrange(desc(Surplus_Millions)) %>%
   select(athlete_display_name, Salary_Millions, Predicted_Salary_Millions, Surplus_Millions, Prod_Index) %>%
   head(10)
+
+# Data Visualization
 
 ggplot(player_data_2026_eff, aes(x = Prod_Index, y = Salary_Millions)) + 
   geom_point(alpha = 0.6, color = "dodgerblue", size = 2) +
