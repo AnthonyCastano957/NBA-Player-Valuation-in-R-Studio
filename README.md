@@ -21,5 +21,10 @@ Cleaned messy data, such as salary numbers that included $ symbols, destringing,
 Gathered box score data, filtered out players with fewer than 150 minutes played, created per-36 numbers, and used standard weights to create a production index. (one of the independent variables)
 ## Merging
 Inner-joined salary data and box score data, and logged salary to deal with nonlinearity. 
-# GAM model
-K = 5 across two variables, and used the REML method used. 
+## GAM model
+K = 5 across two variables, and used the REML method. 
+## Predictions and conversion from log scale
+Used the GAM formula to predict each player's log salary, added a column for real salary conversion, and added surplus 
+(Pred. Sal. - Act. Salary) to analyze individual player value. 
+## Data Visualization
+Used the ggplot package to generate a visual representation of the data.
